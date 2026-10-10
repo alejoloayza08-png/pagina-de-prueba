@@ -15,7 +15,10 @@ const INITIAL_SEED_DATA = {
     whatsapp_message: 'Hola CLINIDIAB, deseo reservar una cita médica.',
     phone_number: '+593 2 234 5678',
     email_address: 'contacto@clinidiab.com',
-    address_text: 'Kleber Franco entre Juan Montalvo y Páez, Machala, El Oro, Ecuador'
+    address_text: 'Kleber Franco entre Juan Montalvo y Páez, Machala, El Oro, Ecuador',
+    show_top_bar: false,
+    top_bar_badge: 'Consultas Disponibles',
+    top_bar_text: 'Machala · Dr. Carlos Maruri · Medicina General & Salud Integral.'
   },
   services: [
     {

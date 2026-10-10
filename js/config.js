@@ -9,7 +9,7 @@ const CONFIG = {
   SUPABASE_ANON_KEY: window.localStorage.getItem('clinidiab_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6c2xvZXB3eWRyeHl4a2NpeXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0NDczODEsImV4cCI6MjEwNDAyMzM4MX0.uDHP5w0gn8gSfjkZIpNWLR0FVmDw6ZDziDh9bYLO6F0',
   
   // Storage Bucket
-  STORAGE_BUCKET: 'clinidiab-media',
+  STORAGE_BUCKET: 'images',
 
   // Image upload limits
   MAX_IMAGE_SIZE_MB: 5,
@@ -17,7 +17,7 @@ const CONFIG = {
 
   // App Metadata
   APP_NAME: 'CLINIDIAB',
-  ADMIN_EMAIL_DEFAULT: 'admin@clinidiab.com'
+  ADMIN_EMAIL_DEFAULT: 'dr.cmaruri@lafesana.com'
 };
 
 // Expose globally

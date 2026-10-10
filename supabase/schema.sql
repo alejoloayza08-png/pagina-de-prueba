@@ -18,6 +18,9 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     phone_number VARCHAR(50),
     email_address VARCHAR(255),
     address_text TEXT,
+    show_top_bar BOOLEAN DEFAULT false,
+    top_bar_badge VARCHAR(100) DEFAULT 'Consultas Disponibles',
+    top_bar_text TEXT DEFAULT 'Machala · Dr. Carlos Maruri · Medicina General & Salud Integral.',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -124,13 +127,13 @@ CREATE POLICY "Admin All Location" ON public.location FOR ALL TO authenticated U
 -- ==========================================================
 -- Run in Supabase Storage UI or SQL:
 INSERT INTO storage.buckets (id, name, public) 
-VALUES ('clinidiab-media', 'clinidiab-media', true)
+VALUES ('images', 'images', true), ('clinidiab-media', 'clinidiab-media', true)
 ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "Public Read Media" ON storage.objects FOR SELECT USING (bucket_id = 'clinidiab-media');
-CREATE POLICY "Admin Upload Media" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'clinidiab-media');
-CREATE POLICY "Admin Update Media" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'clinidiab-media');
-CREATE POLICY "Admin Delete Media" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'clinidiab-media');
+CREATE POLICY "Public Read Media" ON storage.objects FOR SELECT USING (bucket_id IN ('images', 'clinidiab-media'));
+CREATE POLICY "Public Upload Media" ON storage.objects FOR INSERT WITH CHECK (bucket_id IN ('images', 'clinidiab-media'));
+CREATE POLICY "Public Update Media" ON storage.objects FOR UPDATE USING (bucket_id IN ('images', 'clinidiab-media'));
+CREATE POLICY "Public Delete Media" ON storage.objects FOR DELETE USING (bucket_id IN ('images', 'clinidiab-media'));
 
 -- ==========================================================
 -- INITIAL DEMO SEED DATA

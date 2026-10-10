@@ -38,6 +38,9 @@ async function loadPublicContent() {
       window.dataStore.getLocation()
     ]);
 
+    // 1.5 Render Top Bar
+    renderTopAnnouncementBar(settings);
+
     // 2. Render Hero & Branding
     renderBrandingAndHero(settings);
 
@@ -64,6 +67,25 @@ async function loadPublicContent() {
 
   } catch (error) {
     console.error('Error loading public content:', error);
+  }
+}
+
+function renderTopAnnouncementBar(settings) {
+  const bar = document.getElementById('top-announcement-bar');
+  if (!bar) return;
+
+  if (settings && settings.show_top_bar) {
+    bar.style.display = 'flex';
+    const badgeEl = document.getElementById('top-bar-badge');
+    if (badgeEl && settings.top_bar_badge) {
+      badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ${window.Utils.escapeHtml(settings.top_bar_badge)}`;
+    }
+    const textEl = document.getElementById('top-bar-text');
+    if (textEl && settings.top_bar_text) {
+      textEl.textContent = settings.top_bar_text;
+    }
+  } else {
+    bar.style.display = 'none';
   }
 }
 
@@ -167,9 +189,8 @@ function renderServices(services) {
               <span class="text-xs text-slate-400 font-medium block">Inversión:</span>
               <span class="text-2xl font-extrabold text-sky-700">${formattedPrice}</span>
             </div>
-            <a href="${window.Utils.getWhatsAppUrl(window.currentWhatsAppNumber, 'Hola CLINIDIAB, solicito información para: ' + service.title)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-sky-50 text-sky-700 hover:bg-sky-600 hover:text-white transition-custom">
-              Reservar
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <a href="${window.Utils.getWhatsAppUrl(window.currentWhatsAppNumber, 'Hola Dr. Carlos, deseo agendar una cita para el servicio de: *' + service.title + '*. ¿Qué horarios tienen disponibles?')}" target="_blank" rel="noopener" class="bg-slate-900 hover:bg-black text-white px-7 py-2.5 rounded-full font-bold text-sm shadow-md shadow-slate-900/15 hover:shadow-slate-900/30 transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center">
+              <span>Reservar</span>
             </a>
           </div>
         </div>
@@ -244,10 +265,16 @@ function renderContactAndHours(settings, hours) {
     }
   }
 
-  // Business hours table/list
+  // Business hours table/list with automated HOY badge
   const hoursContainer = document.getElementById('business-hours-list');
   if (hoursContainer && hours) {
+    const daysMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const currentDayName = daysMap[new Date().getDay()];
+
     hoursContainer.innerHTML = hours.map(day => {
+      const isToday = day.day_name && day.day_name.toLowerCase() === currentDayName.toLowerCase();
+      const hoyBadge = isToday ? `<span class="ml-2 inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-300"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>HOY</span>` : '';
+
       let timeText = '';
       if (!day.is_open) {
         timeText = '<span class="text-rose-500 font-semibold">Cerrado</span>';
@@ -266,8 +293,8 @@ function renderContactAndHours(settings, hours) {
       }
 
       return `
-        <div class="flex items-center justify-between py-2.5 border-b border-slate-100 last:border-0 text-sm">
-          <span class="font-bold text-slate-800">${window.Utils.escapeHtml(day.day_name)}</span>
+        <div class="flex items-center justify-between py-2.5 border-b border-slate-100 last:border-0 text-sm ${isToday ? 'bg-emerald-50/50 -mx-2 px-2 rounded-lg' : ''}">
+          <span class="font-bold text-slate-800 flex items-center">${window.Utils.escapeHtml(day.day_name)}${hoyBadge}</span>
           <div class="text-right">${timeText}</div>
         </div>
       `;
